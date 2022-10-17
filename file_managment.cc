@@ -43,6 +43,14 @@ FileManagment::FileManagment(std::string EXTERNAL_INPUT_FILENAME_1, std::string 
         data_vector_file2.push_back(pair_alphabet_language_file2);
       }
     }
+  } 
+  else {
+    while (!input_1.eof()) {
+      std::string file_line;
+      std::getline(input_1, file_line);
+      pair_alphabet_language_file1 = ObtainFileData(file_line);
+      data_vector_file1.push_back(pair_alphabet_language_file1);
+    }
   }
 }
 
@@ -51,26 +59,49 @@ void FileManagment::BinaryOperations() {
   switch (OPCODE) {
     case 1: {
       for (unsigned int data_vector_index = 0; data_vector_index < data_vector_file1.size(); ++data_vector_index) {
-        WriteOutput(result.Concatenation(data_vector_file1[data_vector_index].second,data_vector_file2[data_vector_index].second));
+        WriteOutput(result.Concatenation(data_vector_file1[data_vector_index].second, data_vector_file2[data_vector_index].second));
       }
     }
       break;
     case 2: {
       for (unsigned int data_vector_index = 0; data_vector_index < data_vector_file1.size(); ++data_vector_index) {
-        WriteOutput(result.Union(data_vector_file1[data_vector_index].second,data_vector_file2[data_vector_index].second));
+        WriteOutput(result.Union(data_vector_file1[data_vector_index].second, data_vector_file2[data_vector_index].second));
       }
     }
     break;
     case 3: {
       for (unsigned int data_vector_index = 0; data_vector_index < data_vector_file1.size(); ++data_vector_index) {
-        WriteOutput(result.Intersection(data_vector_file1[data_vector_index].second,data_vector_file2[data_vector_index].second));
+        WriteOutput(result.Intersection(data_vector_file1[data_vector_index].second, data_vector_file2[data_vector_index].second));
       }
-      }
+    }
     
     break;
     case 4: {
+      for (unsigned int data_vector_index = 0; data_vector_index < data_vector_file1.size(); ++data_vector_index) {
+        WriteOutput(result.Difference(data_vector_file1[data_vector_index].second, data_vector_file2[data_vector_index].second));
       }
+    }
     
+    break;
+    default:
+      break;
+  }
+}
+
+void FileManagment::UnaryOperations() {
+  Language result;
+  switch (OPCODE) {
+    case 5: {
+      for (unsigned int data_vector_index = 0; data_vector_index < data_vector_file1.size(); ++data_vector_index) {
+        WriteOutput(result.Inverse(data_vector_file1[data_vector_index].second));
+      }
+    }
+      break;
+    case 6: {
+      for (unsigned int data_vector_index = 0; data_vector_index < data_vector_file1.size(); ++data_vector_index) {
+        WriteOutput(result.Inverse(data_vector_file1[data_vector_index].second));
+      }
+    }
     break;
     default:
       break;

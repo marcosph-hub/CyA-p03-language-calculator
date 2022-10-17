@@ -16,5 +16,7 @@ class Language {
   Language Concatenation(Language file1_language, Language file2_language);
   Language Union(Language file1_language, Language file2_language);
   Language Intersection(Language file1_language, Language file2_language);
+  Language Difference(Language file1_language, Language file2_language);
+  Language Inverse(Language file1_language);
 
 };

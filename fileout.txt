@@ -1,4 +1,4 @@
-{ 0 }
-{ }
-{ 010 111 }
-{ x yxy }
+{ a cba bac ccbb 0 }
+{ a aa aaa }
+{ a aa baba 010 bb 111 }
+{ x y xx yxy }

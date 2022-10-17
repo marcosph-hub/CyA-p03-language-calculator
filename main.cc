@@ -43,5 +43,11 @@ int main (int argc, char *argv[]) {
   }
 
   FileManagment data_processed(INPUT_FILENAME_1, INPUT_FILENAME_2, OUTPUT_FILENAME, OPCODE);
+  if (OPCODE >= 1 && OPCODE < 5) {
   data_processed.BinaryOperations();
+  } else if (OPCODE >= 5 && OPCODE < 7) {
+    data_processed.UnaryOperations();
+  } else {
+    std::cerr << "Código de operación inválido" << std::endl;
+  }
 }
