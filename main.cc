@@ -51,3 +51,9 @@ int main (int argc, char *argv[]) {
     std::cerr << "Código de operación inválido" << std::endl;
   }
 }
+
+/*
+<--TODO --!>
+cambiar el metodo de obtener datos del fichero para recoger el identificador y el lenguaje,
+[pair <ID, lang>]
+*/
