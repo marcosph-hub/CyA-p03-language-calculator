@@ -21,6 +21,7 @@ class FileManagment {
   public: 
   FileManagment(std::string EXTERNAL_INPUT_FILENAME_1, std::string EXTERNAL_INPUT_FILENAME_2, std::string EXTERNAL_OUTPUT_FILENAME, int EXTERNAL_OPCODE);
   void BinaryOperations();
+  void UnaryOperations();
   friend std::ostream& operator<<(std::ostream &os, FileManagment data_vector_);
   void WriteOutput(Language operation_result);
   int NumberOfLines(std::string input_file);

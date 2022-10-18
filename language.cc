@@ -2,9 +2,15 @@
 
 Language::Language() {
   language = {};
+  identifier = "";
 }
 
 Language::Language(std::vector<Word> external_language) {
+  language = external_language;
+}
+
+Language::Language(std::string external_identifier, std::vector<Word> external_language) {
+  identifier = external_identifier;
   language = external_language;
 }
 
@@ -14,6 +20,10 @@ void Language::setLanguage(std::vector<Word> external_language) {
 
 std::vector<Word> Language::getLanguage() {
   return language;
+}
+
+std::string Language::getIdentifier() {
+  return identifier;
 }
 
 Language Language::Concatenation(Language file1_language, Language file2_language) {
@@ -43,7 +53,7 @@ Language Language::Union(Language file1_language, Language file2_language) {
 }
 
 Language Language::Intersection(Language file1_language, Language file2_language) {
-  Language union_result;
+  Language intersection_result;
   std::vector<Word> word_vector_to_set;
 
   for (unsigned int language1_index = 0; language1_index < file1_language.getLanguage().size(); ++language1_index) {
@@ -53,8 +63,35 @@ Language Language::Intersection(Language file1_language, Language file2_language
       }
     }
   }
-  union_result.setLanguage(word_vector_to_set);
-  return union_result;
+  intersection_result.setLanguage(word_vector_to_set);
+  return intersection_result;
+}
+
+//if( file1_language.getLanguage()[language1_index].getWord() != file2_language.getLanguage()[language2_index].getWord())
+Language Language::Difference(Language file1_language, Language file2_language) {
+  Language difference_result;
+  std::vector<Word> word_vector_to_set;
+
+  for (unsigned int language1_index = 0; language1_index < file1_language.getLanguage().size(); ++language1_index) {
+    for (unsigned int language2_index = 0; language2_index < file2_language.getLanguage().size(); ++language2_index) {
+      int compare_flag = file1_language.getLanguage()[language1_index].getWord().compare(file2_language.getLanguage()[language2_index].getWord());
+      if (compare_flag != 0) {
+        word_vector_to_set.push_back(file1_language.getLanguage()[language1_index].getWord());
+      }
+    }
+  }
+  difference_result.setLanguage(word_vector_to_set);
+  return difference_result;
+}
+
+Language Language::Inverse(Language file1_language) {
+  Language inverse_result;
+  std::vector<Word> word_vector_to_set;
+  for (unsigned int language1_index = 0; language1_index < file1_language.getLanguage().size(); ++language1_index) {
+    word_vector_to_set.push_back(file1_language.getLanguage()[language1_index].Inverse());
+  }
+  inverse_result.setLanguage(word_vector_to_set);
+  return inverse_result;
 }
 
 std::ostream& operator<<(std::ostream &os, Language &summoner_language) {
