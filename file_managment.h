@@ -12,14 +12,12 @@
 class FileManagment {
   private:
   std::string INPUT_FILENAME_1;
-  std::string INPUT_FILENAME_2;
   std::string OUTPUT_FILENAME;
-  int OPCODE; 
+  int OPCODE;
   std::vector<std::pair<Alphabet, Language>> data_vector_file1;
-  std::vector<std::pair<Alphabet, Language>> data_vector_file2;
   
   public: 
-  FileManagment(std::string EXTERNAL_INPUT_FILENAME_1, std::string EXTERNAL_INPUT_FILENAME_2, std::string EXTERNAL_OUTPUT_FILENAME, int EXTERNAL_OPCODE);
+  FileManagment(std::string EXTERNAL_INPUT_FILENAME_1, std::string EXTERNAL_OUTPUT_FILENAME, int EXTERNAL_OPCODE);
   void BinaryOperations();
   void UnaryOperations();
   friend std::ostream& operator<<(std::ostream &os, FileManagment data_vector_);

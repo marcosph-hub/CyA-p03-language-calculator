@@ -22,6 +22,10 @@ std::vector<Word> Language::getLanguage() {
   return language;
 }
 
+void Language::setIdentifier(std::string new_id) {
+  identifier = new_id;
+}
+
 std::string Language::getIdentifier() {
   return identifier;
 }
@@ -95,7 +99,7 @@ Language Language::Inverse(Language file1_language) {
 }
 
 std::ostream& operator<<(std::ostream &os, Language &summoner_language) {
-  os << "{";
+  os << summoner_language.identifier <<" {";
   for (unsigned int vector_index = 0; vector_index < summoner_language.language.size(); vector_index++) {
     os << summoner_language.language[vector_index].getWord() << " ";
   } 

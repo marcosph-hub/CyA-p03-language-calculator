@@ -3,7 +3,7 @@
 #include "file_managment.h"
 
 int main (int argc, char *argv[]) {
-  if (argc - 1 != 4) {
+  if (argc - 1 != 3) {
     if (argc - 1 == 1) {
       std::string help = argv[1];
       if (help == "--help") {
@@ -12,23 +12,17 @@ int main (int argc, char *argv[]) {
         std::cout << "./p01_strings filein.txt fileout.txt opcode\n";
         std::cout << "filein.txt: un fichero .txt que especifica los alfabetos y las cadenas\n";
         std::cout << "fileout.txt: un fichero .txt de salida con los resultados\n";
-        std::cout << "[1] Concatenación\n";
-        std::cout << "[2] Unión\n";
-        std::cout << "[3] Intersección\n";
-        std::cout << "[4] Diferencia\n";
-        std::cout << "[5] Inversa\n";
-        std::cout << "[6] Potencia\n";
         return 1;
       } 
     }
-    std::cout << "Modo de empleo: ./p01_strings filein.txt fileout.txt opcode\n";
+    std::cout << "Modo de empleo: ./p03_calculator filein.txt fileout.txt\n";
     std::cout << "Pruebe p01_strings --help’ para más información.\n";
     return 1;
   }
   const std::string INPUT_FILENAME_1 = argv[1]; 
-  const std::string INPUT_FILENAME_2 = argv[2]; 
-  const std::string OUTPUT_FILENAME = argv[3];
-  std::string string_opcode = argv[4];
+ // const std::string INPUT_FILENAME_2 = argv[2]; 
+  const std::string OUTPUT_FILENAME = argv[2];
+  std::string string_opcode = argv[3];
   const int OPCODE = std::stoi(string_opcode);
 
   if (OPCODE < 1 && OPCODE > 6) {
@@ -42,14 +36,9 @@ int main (int argc, char *argv[]) {
     return 1;
   }
 
-  FileManagment data_processed(INPUT_FILENAME_1, INPUT_FILENAME_2, OUTPUT_FILENAME, OPCODE);
-  if (OPCODE >= 1 && OPCODE < 5) {
+  FileManagment data_processed(INPUT_FILENAME_1, OUTPUT_FILENAME, OPCODE);
   data_processed.BinaryOperations();
-  } else if (OPCODE >= 5 && OPCODE < 7) {
-    data_processed.UnaryOperations();
-  } else {
-    std::cerr << "Código de operación inválido" << std::endl;
-  }
+  data_processed.UnaryOperations();
 }
 
 /*

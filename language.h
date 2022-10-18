@@ -13,6 +13,7 @@ class Language {
   Language(std::vector<Word> external_language);
   Language(std::string identifier, std::vector<Word> external_language);
   void setLanguage(std::vector<Word> external_language);
+  void setIdentifier(std::string new_id);
   std::vector<Word> getLanguage();
   std::string getIdentifier();
   friend std::ostream& operator<<(std::ostream &os, Language &summoner_language);

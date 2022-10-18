@@ -1,22 +1,26 @@
 #include "file_managment.h"
 
-FileManagment::FileManagment(std::string EXTERNAL_INPUT_FILENAME_1, std::string EXTERNAL_INPUT_FILENAME_2, std::string EXTERNAL_OUTPUT_FILENAME, int EXTERNAL_OPCODE) {
+FileManagment::FileManagment(std::string EXTERNAL_INPUT_FILENAME_1, std::string EXTERNAL_OUTPUT_FILENAME, int EXTERNAL_OPCODE) {
   
   INPUT_FILENAME_1 = EXTERNAL_INPUT_FILENAME_1;
-  INPUT_FILENAME_2 = EXTERNAL_INPUT_FILENAME_2;
   OUTPUT_FILENAME = EXTERNAL_OUTPUT_FILENAME;
   OPCODE = EXTERNAL_OPCODE;
   
   std::ifstream input_1(INPUT_FILENAME_1);
-  std::ifstream input_2(INPUT_FILENAME_2);
   std::ofstream output(OUTPUT_FILENAME);
   std::pair<Alphabet, Language> pair_alphabet_language_file1;
-  std::pair<Alphabet, Language> pair_alphabet_language_file2;
   
-    if (!input_1.good()) {
+  if (!input_1.good()) {
     std::cout << "Error en la apertura de fichero" << std::endl;
     exit(1);
   }
+  while (!input_1.eof()) {
+      std::string file_line;
+      std::getline(input_1, file_line);
+      pair_alphabet_language_file1 = ObtainFileData(file_line);
+      data_vector_file1.push_back(pair_alphabet_language_file1);
+    } 
+  /*
   if (!input_2.good()) {
     std::cout << "Error en la apertura del segundo fichero" << std::endl;
     exit(1);
@@ -43,15 +47,10 @@ FileManagment::FileManagment(std::string EXTERNAL_INPUT_FILENAME_1, std::string 
         data_vector_file2.push_back(pair_alphabet_language_file2);
       }
     }
-  } 
-  else {
-    while (!input_1.eof()) {
-      std::string file_line;
-      std::getline(input_1, file_line);
-      pair_alphabet_language_file1 = ObtainFileData(file_line);
-      data_vector_file1.push_back(pair_alphabet_language_file1);
-    }
-  }
+  } */
+  //else {
+    
+ // }
 }
 
 void FileManagment::BinaryOperations() {
@@ -59,26 +58,26 @@ void FileManagment::BinaryOperations() {
   switch (OPCODE) {
     case 1: {
       for (unsigned int data_vector_index = 0; data_vector_index < data_vector_file1.size(); ++data_vector_index) {
-        WriteOutput(result.Concatenation(data_vector_file1[data_vector_index].second, data_vector_file2[data_vector_index].second));
+       // WriteOutput(result.Concatenation(data_vector_file1[data_vector_index].second, data_vector_file2[data_vector_index].second));
       }
     }
       break;
     case 2: {
       for (unsigned int data_vector_index = 0; data_vector_index < data_vector_file1.size(); ++data_vector_index) {
-        WriteOutput(result.Union(data_vector_file1[data_vector_index].second, data_vector_file2[data_vector_index].second));
+       // WriteOutput(result.Union(data_vector_file1[data_vector_index].second, data_vector_file2[data_vector_index].second));
       }
     }
     break;
     case 3: {
       for (unsigned int data_vector_index = 0; data_vector_index < data_vector_file1.size(); ++data_vector_index) {
-        WriteOutput(result.Intersection(data_vector_file1[data_vector_index].second, data_vector_file2[data_vector_index].second));
+       // WriteOutput(result.Intersection(data_vector_file1[data_vector_index].second, data_vector_file2[data_vector_index].second));
       }
     }
     
     break;
     case 4: {
       for (unsigned int data_vector_index = 0; data_vector_index < data_vector_file1.size(); ++data_vector_index) {
-        WriteOutput(result.Difference(data_vector_file1[data_vector_index].second, data_vector_file2[data_vector_index].second));
+       // WriteOutput(result.Difference(data_vector_file1[data_vector_index].second, data_vector_file2[data_vector_index].second));
       }
     }
     
@@ -132,6 +131,8 @@ std::pair<Alphabet,Language> FileManagment::ObtainFileData(std::string ext_filel
   Alphabet alphabet;
   Language language;
   std::string word_to_set;
+  std::string identifier;
+  const char EQUAL = '=';
   const char OPEN_BRACE = '{';
   const char CLOSE_BRACE = '}';
   const std::string WHITESPACE = " ";
@@ -143,10 +144,48 @@ std::pair<Alphabet,Language> FileManagment::ObtainFileData(std::string ext_filel
   std::vector<std::string> file_alphabet_container;
   std::vector<std::string> file_language_container;
 
+  file_line.erase(std::remove(file_line.begin(), file_line.end(), ','), file_line.end());
   int first_brace = file_line.find_first_of(OPEN_BRACE);
   int first_close_brace = file_line.find_first_of(CLOSE_BRACE);
-  int second_brace = file_line.find_last_of(OPEN_BRACE);
-  int second_close_brace = file_line.find_last_of(CLOSE_BRACE);
+  int equal_pos = file_line.find(EQUAL);
+  //int second_brace = file_line.find_last_of(OPEN_BRACE);
+  //int second_close_brace = file_line.find_last_of(CLOSE_BRACE);
+  
+  
+  std::cout << identifier << std::endl;
+  if (equal_pos != -1) {
+      for (int line_iterator = 0; line_iterator < equal_pos; ++line_iterator) {
+      if (file_line[line_iterator] != ' ') {
+        identifier.push_back(file_line[line_iterator]);
+      }
+    }
+    language.setIdentifier(identifier);
+
+    for (int i = first_brace + 1; i < first_close_brace; ++i) {
+      std::cout << file_line[i];
+    }
+    std::cout << std::endl;
+  } // caso de lineas del fichero donde se muestran las operaciones a realizar
+
+  /*
+  for (int string_index = first_brace + 1; string_index < first_close_brace; ++string_index) {
+    std::cout << file_line[string_index] << std::endl;
+    while (file_line[string_index] != ' ') {
+      word_to_set.push_back(file_line[string_index]);
+      string_index++;
+    }
+    word.setWord(word_to_set);
+    word_to_set.clear();
+    language_to_set.push_back(word);
+
+  }
+      language.setLanguage(language_to_set);
+    language_to_set.clear();
+  */
+  
+  
+    //std::cout << "mostrando lenguaje" << std::endl;
+    //std::cout << language << std::endl;
 
   for (int alphabet_separator = first_brace + 1; alphabet_separator < first_close_brace; ++alphabet_separator) {
     std::string symbol(1,file_line[alphabet_separator]);
@@ -155,7 +194,7 @@ std::pair<Alphabet,Language> FileManagment::ObtainFileData(std::string ext_filel
   }
   alphabet.setAlphabet(alphabet_to_set);
   alphabet_to_set.clear();
-
+/*
   for (int language_index = second_brace + 1; language_index < second_close_brace; ++language_index) {
     while (file_line[language_index] != ' ') {
       word_to_set.push_back(file_line[language_index]);
@@ -164,9 +203,8 @@ std::pair<Alphabet,Language> FileManagment::ObtainFileData(std::string ext_filel
     word.setWord(word_to_set);
     word_to_set.clear();
     language_to_set.push_back(word);
-  }
-  language.setLanguage(language_to_set);
-  language_to_set.clear();
+  }*/
+  
   pair_alphabet_language.first = alphabet;
   pair_alphabet_language.second = language;
   return pair_alphabet_language;
