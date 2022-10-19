@@ -37,7 +37,6 @@ int main (int argc, char *argv[]) {
   }
 
   FileManagment data_processed(INPUT_FILENAME_1, OUTPUT_FILENAME, OPCODE);
-  data_processed.BinaryOperations();
   data_processed.RPNAlgorithm();
 }
 

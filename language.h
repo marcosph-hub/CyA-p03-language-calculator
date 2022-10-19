@@ -22,6 +22,6 @@ class Language {
   Language Intersection(Language file1_language, Language file2_language);
   Language Difference(Language file1_language, Language file2_language);
   Language Inverse(Language file1_language);
-  //Language Potential(Language file1_language);
+  Language Potential(Language file1_language, int exponente);
 
 };

@@ -14,26 +14,30 @@ FileManagment::FileManagment(std::string EXTERNAL_INPUT_FILENAME_1, std::string 
     exit(1);
   }
   while (!input_1.eof()) {
-      std::string file_line;
-      std::getline(input_1, file_line);
-      ObtainFileData(file_line);
-    } 
-  /*
- */
-  //else {
-    
- // }
+    std::string file_line;
+    std::getline(input_1, file_line);
+    ObtainFileData(file_line);
+  } 
 }
 
-void FileManagment::BinaryOperations() {
+int FileManagment::ResolveOperator(std::string op_code) {
+  if (op_code == "+") return 1;
+  if (op_code == "|") return 2;
+  if (op_code == "^") return 3;
+  if (op_code == "-") return 4;
+  if (op_code == "!") return 5;
+  if (op_code == "*") return 6;
+}
+
+Language FileManagment::BinaryOperations(Language language1, Language language2, std::string op_code) {
   Language result;
-  switch (OPCODE) {
+  switch (ResolveOperator(op_code)) {
     case 1: {
-      for (unsigned int data_vector_index = 0; data_vector_index < vector_languages.size(); ++data_vector_index) {
-       // WriteOutput(result.Concatenation(data_vector_file1[data_vector_index].second, data_vector_file2[data_vector_index].second));
-      }
+     return result.Concatenation(language1, language2);
+      
     }
-      break;
+    break;
+
     case 2: {
       for (unsigned int data_vector_index = 0; data_vector_index < vector_languages.size(); ++data_vector_index) {
        // WriteOutput(result.Union(data_vector_file1[data_vector_index].second, data_vector_file2[data_vector_index].second));
@@ -59,9 +63,9 @@ void FileManagment::BinaryOperations() {
   }
 }
 
-void FileManagment::UnaryOperations() {
+Language FileManagment::UnaryOperations(Language language1, Language language2, std::string op_code) {
   Language result;
-  switch (OPCODE) {
+  switch (ResolveOperator(op_code)) {
     case 5: {
       for (unsigned int data_vector_index = 0; data_vector_index < vector_languages.size(); ++data_vector_index) {
        // WriteOutput(result.Inverse(data_vector_file1[data_vector_index].second));
@@ -164,20 +168,81 @@ void FileManagment::ObtainFileData(std::string ext_fileline) {
 
 
 void FileManagment::RPNAlgorithm() {
+  Language result_language;
+  const std::string op_concat = "+";
+  const std::string op_union = "|";
+  const std::string op_intersec = "^";
+  const std::string op_difference = "-";
+  const std::string op_inverse = "!";
+  const std::string op_pow = "*";
   std::vector<std::string> RPN_stack;
   for (unsigned int op_vector_index = 0; op_vector_index < operation_filedata.size(); ++op_vector_index) {
     std::stack<std::string> input_stack;
+    std::vector<std::string> input_vector;
     std::stack<std::string> stack;
     for (unsigned int iterator = 0; iterator < operation_filedata[op_vector_index].size(); ++iterator) {
-      input_stack.push(operation_filedata[op_vector_index][iterator]);
-    }
-    while (!input_stack.empty()) {
-      
+      input_vector.push_back(operation_filedata[op_vector_index][iterator]);
+    } //posible problema que repita la ultima entrada dos veces
+    while (input_vector.size() != 0) {
 
+      if (input_vector[0] != op_concat && input_vector[0] != op_union && input_vector[0] != op_intersec 
+      && input_vector[0] != op_difference && input_vector[0] != op_inverse && input_vector[0] != op_pow) {
+        stack.push(input_vector[0]);
+        input_vector.erase(input_vector.begin() + 0);
+      } 
+      else if (input_vector[0] == op_concat || input_vector[0] == op_union || input_vector[0] == op_intersec 
+      || input_vector[0] == op_difference) {
+        if (stack.size() < 2) {
+          std::cout << "ERROR. OPERANDOS INSUFICIENTES" << std::endl;
+        }
+        std::string op2_id = stack.top();
+        stack.pop();
+        std::string op1_id = stack.top();
+        stack.pop();
+        Language op1 = getLanguage_ByID(op1_id);
+        Language op2 = getLanguage_ByID(op2_id);
+
+        //lamada a binaryoperation(l1, l2, op)
+        std::cout << op1_id << " " << input_vector[0] << " " << op2_id << std::endl;
+        result_language = BinaryOperations(op1, op2, input_vector[0]);
+        //comprobar y probar
+        input_vector.erase(input_vector.begin() + 0);
+      }
+      else {
+        std::string op1 = stack.top();
+        stack.pop();
+        std::cout << op1 << " " << input_vector[0] << std::endl;
+        input_vector.erase(input_vector.begin() + 0);
+      }
     }
+    std::cout << "---Final ciclo---" << std::endl;
   }
 }
 
+Language FileManagment::getLanguage_ByID(std::string id) {
+  Language result;
+  for (unsigned int lang_iterator = 0; lang_iterator < vector_languages.size(); ++lang_iterator) {
+    if (vector_languages[lang_iterator].getIdentifier() == id) {
+      result = vector_languages[lang_iterator];
+    }
+  }
+  return result;
+}
+
+/*
+for (unsigned int iterator = 0; iterator < operation_filedata[op_vector_index].size(); ++iterator) {
+      input_stack.push(operation_filedata[op_vector_index][iterator]);
+    }
+    while (!input_stack.empty()) {
+      if (input_stack.top() != op_concat || input_stack.top() != op_union || input_stack.top() != op_intersec 
+      || input_stack.top() != op_difference || input_stack.top() != op_inverse || input_stack.top() != op_pow ) {
+        std::cout << "meter en la pila -> " << input_stack.top() << std::endl;
+        input_stack.
+      } else {
+        std::cout << "es un operador" << std::endl;
+      }
+    }
+*/
 
 
 
