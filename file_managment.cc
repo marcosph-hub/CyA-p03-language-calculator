@@ -27,6 +27,7 @@ int FileManagment::ResolveOperator(std::string op_code) {
   if (op_code == "-") return 4;
   if (op_code == "!") return 5;
   if (op_code == "*") return 6;
+  return 0;
 }
 
 Language FileManagment::BinaryOperations(Language language1, Language language2, std::string op_code) {
@@ -34,7 +35,6 @@ Language FileManagment::BinaryOperations(Language language1, Language language2,
   switch (ResolveOperator(op_code)) {
     case 1: {
      return result.Concatenation(language1, language2);
-      
     }
     break;
 
@@ -61,14 +61,15 @@ Language FileManagment::BinaryOperations(Language language1, Language language2,
     default:
       break;
   }
+  return result;
 }
 
-Language FileManagment::UnaryOperations(Language language1, Language language2, std::string op_code) {
+Language FileManagment::UnaryOperations(Language language1, std::string op_code) {
   Language result;
   switch (ResolveOperator(op_code)) {
     case 5: {
       for (unsigned int data_vector_index = 0; data_vector_index < vector_languages.size(); ++data_vector_index) {
-       // WriteOutput(result.Inverse(data_vector_file1[data_vector_index].second));
+        return result.Inverse(language1);
       }
     }
       break;
@@ -81,6 +82,7 @@ Language FileManagment::UnaryOperations(Language language1, Language language2, 
     default:
       break;
   }
+  return result;
 }
 
 void FileManagment::WriteOutput(Language operation_result) {
@@ -152,6 +154,7 @@ void FileManagment::ObtainFileData(std::string ext_fileline) {
     }
     language.setLanguage(language_to_set);
     language_to_set.clear();
+    std::cout << "lenguaje -> " << language << std::endl;
     vector_languages.push_back(language);
 
   } 
@@ -168,7 +171,9 @@ void FileManagment::ObtainFileData(std::string ext_fileline) {
 
 
 void FileManagment::RPNAlgorithm() {
+
   Language result_language;
+  result_language.setIdentifier("LR");
   const std::string op_concat = "+";
   const std::string op_union = "|";
   const std::string op_intersec = "^";
@@ -182,7 +187,7 @@ void FileManagment::RPNAlgorithm() {
     std::stack<std::string> stack;
     for (unsigned int iterator = 0; iterator < operation_filedata[op_vector_index].size(); ++iterator) {
       input_vector.push_back(operation_filedata[op_vector_index][iterator]);
-    } //posible problema que repita la ultima entrada dos veces
+    }
     while (input_vector.size() != 0) {
 
       if (input_vector[0] != op_concat && input_vector[0] != op_union && input_vector[0] != op_intersec 
@@ -202,17 +207,26 @@ void FileManagment::RPNAlgorithm() {
         Language op1 = getLanguage_ByID(op1_id);
         Language op2 = getLanguage_ByID(op2_id);
 
-        //lamada a binaryoperation(l1, l2, op)
         std::cout << op1_id << " " << input_vector[0] << " " << op2_id << std::endl;
         result_language = BinaryOperations(op1, op2, input_vector[0]);
-        //comprobar y probar
+        std::cout << "---Resultado---\n" << result_language <<std::endl;
         input_vector.erase(input_vector.begin() + 0);
+        stack.push(result_language.getIdentifier());
+        vector_languages.push_back(result_language);
       }
       else {
-        std::string op1 = stack.top();
+        if (stack.size() < 1) {
+          std::cout << "ERROR. OPERANDOS INSUFICIENTES" << std::endl;
+        }
+        std::string op1_id = stack.top();
         stack.pop();
+        Language op1 = getLanguage_ByID(op1_id);
         std::cout << op1 << " " << input_vector[0] << std::endl;
+        result_language = UnaryOperations(op1, input_vector[0]);
+        std::cout << "---Resultado---\n" << result_language <<std::endl;
         input_vector.erase(input_vector.begin() + 0);
+        stack.push(result_language.getIdentifier());
+        vector_languages.push_back(result_language);
       }
     }
     std::cout << "---Final ciclo---" << std::endl;
@@ -222,13 +236,23 @@ void FileManagment::RPNAlgorithm() {
 Language FileManagment::getLanguage_ByID(std::string id) {
   Language result;
   for (unsigned int lang_iterator = 0; lang_iterator < vector_languages.size(); ++lang_iterator) {
+
     if (vector_languages[lang_iterator].getIdentifier() == id) {
-      result = vector_languages[lang_iterator];
+      //std::cout << "lenguage by id -> \n" << vector_languages[lang_iterator]<< std::endl;
+      result = vector_languages[lang_iterator].getLanguage();
     }
   }
   return result;
 }
 
+/*
+void FileManagment::PutResultInLanguageVector(Language language) {
+  for (unsigned int lang_iterator = 0; lang_iterator < vector_languages.size(); ++lang_iterator) {
+    if (vector_languages[lang_iterator].getIdentifier() == language.getIdentifier()) {
+      vector_languages[lang_iterator].setLanguage(language.getLanguage());
+  }
+}
+*/
 /*
 for (unsigned int iterator = 0; iterator < operation_filedata[op_vector_index].size(); ++iterator) {
       input_stack.push(operation_filedata[op_vector_index][iterator]);

@@ -21,7 +21,7 @@ class FileManagment {
   public: 
   FileManagment(std::string EXTERNAL_INPUT_FILENAME_1, std::string EXTERNAL_OUTPUT_FILENAME, int EXTERNAL_OPCODE);
   Language BinaryOperations(Language language1, Language language2, std::string op_code);
-  Language UnaryOperations(Language language1, Language language2, std::string op_code);
+  Language UnaryOperations(Language language1, std::string op_code);
   friend std::ostream& operator<<(std::ostream &os, FileManagment data_vector_);
   void WriteOutput(Language operation_result);
   int NumberOfLines(std::string input_file);
@@ -29,5 +29,6 @@ class FileManagment {
   void RPNAlgorithm();
   int ResolveOperator(std::string op_code);
   Language getLanguage_ByID(std::string id);
+  //void PutResultInLanguageVector(Language language);
 
   };

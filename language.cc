@@ -118,6 +118,6 @@ std::ostream& operator<<(std::ostream &os, Language &summoner_language) {
   for (unsigned int vector_index = 0; vector_index < summoner_language.language.size(); vector_index++) {
     os << summoner_language.language[vector_index].getWord() << " ";
   } 
-  os << "}";
+  os << "} ";
   return os;
 }
